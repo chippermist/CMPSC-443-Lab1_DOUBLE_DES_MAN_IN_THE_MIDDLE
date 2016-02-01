@@ -8,17 +8,14 @@ package lab1doubledes;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.security.InvalidKeyException;
 import java.security.*;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.*;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -114,7 +111,7 @@ public class DoubleDES {
         
         String bitString = bits.toString(2);
         
-        System.out.println(bitString);
+        System.out.println("Original bit String: " + bitString);
         
         //String[] keys = null;
 
