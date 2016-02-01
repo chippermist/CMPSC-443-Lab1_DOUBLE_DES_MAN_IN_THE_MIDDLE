@@ -102,85 +102,108 @@ public class DoubleDES {
 	
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeySpecException {
 
-//        for(int i =0; i< args.length; i++){
-//            System.out.println(args[i]);
-//        }
-        
 
         BigInteger bits = new BigInteger(args[0],16);
         
-        String bitString = bits.toString(2);
+        String bitString = bits.toString(16);
         
-        System.out.println("Original bit String: " + bitString);
-        
-        //String[] keys = null;
-
-//        for(int i =0; i< bitString.length(); i++)
-//        {
-//            
-//           for(int j = 0; j<bitString.length();j+=6)
-//           {
-//             
-//              
-//           }
-//        }
+        System.out.println("Original Key String: " + bitString);
         
         
         
-        KeyGenerator keygen1 = KeyGenerator.getInstance("DES");
-        SecretKey desKey1 = keygen1.generateKey();
-        KeyGenerator keygen2 = KeyGenerator.getInstance("DES");
-        SecretKey desKey2 = keygen1.generateKey();
-        DoubleDES crypt1 = new DoubleDES(desKey1, desKey2);
+        //random key generation 
+//        KeyGenerator keygen1 = KeyGenerator.getInstance("DES");
+//        SecretKey desKey1 = keygen1.generateKey();
+//        KeyGenerator keygen2 = KeyGenerator.getInstance("DES");
+//        SecretKey desKey2 = keygen1.generateKey();
+//        DoubleDES crypt1 = new DoubleDES(desKey1, desKey2);
         
         System.out.println("Plain Text: " + args[1]);
         
         
-        String encryptedText = crypt1.encrypt(args[1]);
-        System.out.println("Encrypted Text: " + encryptedText);
+//        String encryptedText = crypt1.encrypt(args[1]); 
+//       
+//        System.out.println("Encrypted Text: " + encryptedText);
+//         
+//        String decryptedText = crypt1.decrypt(encryptedText);
+//        System.out.println("Decrypted Text: " + decryptedText);
+
+        //everything above this WORKS!
         
-        String decryptedText = crypt1.decrypt(encryptedText);
-        System.out.println("Decrypted Text: " + decryptedText);
+        byte[] inputKey = new byte [14];
+        
+        //not sure about this
+        inputKey = DatatypeConverter.parseHexBinary(args[0]);
+        
+        //this will store the bytes for the thing into the inputKey
+        //inputKey = args[0].getBytes();
+        bitString = bits.toString(2);
+        //System.out.println(bitString);
+        
+        String temp = "";
+        for(int i =0 ; i< bitString.length(); i+=7)
+        {
+            int ones =0; 
+            for(int j = i; j < i+7; j++)
+            {
+                if(bitString.charAt(j) ==  '1')
+                {
+                    ones++;
+                }
+                    
+                temp += bitString.charAt(j);
+            }
+            
+            if(ones % 2 == 0)
+            {
+                temp += "1";
+            }
+            else
+            {
+                temp += "0";
+            }
+            
+           
+            
+            
+        }
+        //System.out.println(temp);
+        
+        inputKey = DatatypeConverter.parseHexBinary(temp);
+        
+        byte[] key1 = new byte[8];
+        byte[] key2 = new byte[8];
+        
+        System.arraycopy(inputKey, 0, key1, 0, 8);
+        System.arraycopy(inputKey, 8, key2, 0, 8);
+        
+        
+        
+        
+//        for(int i =0; i<key1.length; i++)
+//        {
+//            System.out.println(key1[i]);
+//        }
+        
+        //add some code for splitting into seperate 8 parts and padding
+        
+        
+        //part where the Key is generated
+        
+        DESKeySpec keySpecEncryptA = new DESKeySpec(key1);
+        SecretKeyFactory keyFactoryA = SecretKeyFactory.getInstance("DES");
+        SecretKey secretKeyA = keyFactoryA.generateSecret(keySpecEncryptA);
+        
+        
+        DESKeySpec keySpecEncryptB = new DESKeySpec(key2);
+        SecretKeyFactory keyFactoryB = SecretKeyFactory.getInstance("DES");
+        SecretKey secretKeyB = keyFactoryB.generateSecret(keySpecEncryptB);
 
-        //byte[] first = key1.getBytes();
-        //byte[] second = key2.getBytes();
-/*
-        byte[] arg1 = new byte [14];
-        //arg1 = args[0].getBytes();
-        arg1 = parseHexBinary(args[0]);
-        //        for(int i =0; i< arg1.length; i++){
-        //            System.out.println(arg1[i]);
-        //        }
-        byte[] key1 = new byte[7];
-        byte[] key2 = new byte[7];
-        System.arraycopy(arg1, 0, key1, 0, 7);
-        System.arraycopy(arg1, 7, key2, 0, 7);
-        //System.out.println(key1[0]);
-        int a = key1[0];
-        //System.out.println(Integer.toBinaryString(key1[0]));
-        //        System.out.println("Hello this is the first key");
-        //        for(int i =0; i< key1.length; i++){
-        //            System.out.println(key1[i]);
-        //        }
-        // DESKeySpec keySpecEncrypt1 = new DESKeySpec(key1);
-        // SecretKeyFactory keyFactory1 = SecretKeyFactory.getInstance("DES");
-        // SecretKey secretKey1 = keyFactory1.generateSecret(keySpecEncrypt1);
-        // DESKeySpec keySpecEncrypt2 = new DESKeySpec(key2);
-        // SecretKeyFactory keyFactory2 = SecretKeyFactory.getInstance("DES");
-        // SecretKey secretKey2 = keyFactory2.generateSecret(keySpecEncrypt2);
-        KeyGenerator keygen1 = KeyGenerator.getInstance("DES");
-        SecretKey desKey1 = keygen1.generateKey();
-        KeyGenerator keygen2 = KeyGenerator.getInstance("DES");
-        SecretKey desKey2 = keygen1.generateKey();
-        DoubleDES crypt1 = new DoubleDES(desKey1, desKey2);
-        byte[] encryptedText = crypt1.encrypt(args[1]);
-        System.out.println(encryptedText.toString());
-        byte[] decryptedText = crypt1.decrypt(encryptedText.toString());
-        System.out.println(decryptedText.toString());
-         */
-
-
-
+        DoubleDES crypt2 = new DoubleDES(secretKeyA, secretKeyB);
+        
+        System.out.println("Encrypted Text: " + crypt2.encrypt(args[1]));
+        
+        System.out.println("Decrypted Text: " + crypt2.decrypt(crypt2.encrypt(args[1])));
        
     }
     
