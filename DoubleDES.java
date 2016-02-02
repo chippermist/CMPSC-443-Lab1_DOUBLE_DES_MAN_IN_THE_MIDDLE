@@ -3,7 +3,6 @@
     CMPSC 443 - Lab 1 
     Double DES implementation - Man in the middle attack
  */
-package lab1doubledes;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
