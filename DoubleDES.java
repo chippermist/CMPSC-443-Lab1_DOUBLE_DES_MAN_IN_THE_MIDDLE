@@ -79,22 +79,25 @@ public class DoubleDES {
 
         //byte[] plain = DatatypeConverter.parseHexBinary(plaintext);
         
-        byte[] plain = plaintext.getBytes("UTF-8");
+        //System.out.println("PlainText : "+ plaintext);
+        byte[] plain = DatatypeConverter.parseHexBinary(plaintext);
         
         byte[] ciphertext = c1.doFinal(plain);
         byte[] cipherfinal = c2.doFinal(ciphertext);
 
-        return new sun.misc.BASE64Encoder().encode(cipherfinal);
+        return DatatypeConverter.printHexBinary(cipherfinal);
     }
 
 
     public String decrypt(String ciphertext) throws IOException, IllegalBlockSizeException, BadPaddingException{
-        byte[] cipher = new sun.misc.BASE64Decoder().decodeBuffer(ciphertext);
+        byte[] cipher = DatatypeConverter.parseHexBinary(ciphertext);
        
         byte[] plaintext = c3.doFinal(cipher);
         byte[] plainfinal = c4.doFinal(plaintext);
 
-        return new String(plainfinal, "UTF-8");
+        //return new String(plainfinal, "UTF-8");
+        
+        return DatatypeConverter.printHexBinary(plainfinal);
 
     }
 
@@ -107,7 +110,7 @@ public class DoubleDES {
         
         String bitString = bits.toString(16);
         
-        System.out.println("Original Key String: " + bitString);
+        //System.out.println("Original Key String: " + bitString);
         
         
         
@@ -117,10 +120,10 @@ public class DoubleDES {
 //        KeyGenerator keygen2 = KeyGenerator.getInstance("DES");
 //        SecretKey desKey2 = keygen1.generateKey();
 //        DoubleDES crypt1 = new DoubleDES(desKey1, desKey2);
-        
-        System.out.println("Plain Text: " + args[1]);
-        
-        
+//        
+//        System.out.println("Plain Text: " + args[1]);
+//        
+//        
 //        String encryptedText = crypt1.encrypt(args[1]); 
 //       
 //        System.out.println("Encrypted Text: " + encryptedText);
@@ -137,13 +140,25 @@ public class DoubleDES {
         
         //this will store the bytes for the thing into the inputKey
         //inputKey = args[0].getBytes();
-        bitString = bits.toString(2);
+        bitString = "";
+        for(int i =0; i< inputKey.length;i++)
+        {
+            //System.out.println(String.format("%02X",0x00)+" , " +inputKey[i]);
+            
+            
+            byte b1 = inputKey[i];
+            bitString += String.format("%8s",Integer.toBinaryString(b1 & 0xFF)).replace(' ','0');
+           
+        }
+        
         //System.out.println(bitString);
         
+       
+        
         String temp = "";
-        for(int i =0 ; i< bitString.length(); i+=7)
+        for(int i =0 ; i < bitString.length(); i+=7)
         {
-            int ones =0; 
+            int ones = 0; 
             for(int j = i; j < i+7; j++)
             {
                 if(bitString.charAt(j) ==  '1')
@@ -167,9 +182,10 @@ public class DoubleDES {
             
             
         }
-        //System.out.println(temp);
+        //System.out.println("Parity String"+ temp);
         
-        inputKey = DatatypeConverter.parseHexBinary(temp);
+  
+        inputKey = new BigInteger(temp, 2).toByteArray();
         
         byte[] key1 = new byte[8];
         byte[] key2 = new byte[8];
@@ -178,11 +194,11 @@ public class DoubleDES {
         System.arraycopy(inputKey, 8, key2, 0, 8);
         
         
-        
-        
-//        for(int i =0; i<key1.length; i++)
+//        System.out.print("Key2 ");
+////        
+//        for(int i =0; i<key2.length; i++)
 //        {
-//            System.out.println(key1[i]);
+//            System.out.print(key2[i]);
 //        }
         
         //add some code for splitting into seperate 8 parts and padding
