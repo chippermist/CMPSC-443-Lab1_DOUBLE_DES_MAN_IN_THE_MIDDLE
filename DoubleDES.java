@@ -17,13 +17,9 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.*;
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.DESKeySpec;
-import java.util.Scanner;
 import javax.xml.bind.DatatypeConverter;
-import static javax.xml.bind.DatatypeConverter.parseHexBinary;
-import sun.security.util.BitArray;
 /**
  *
  * @author chinmaygarg
@@ -108,7 +104,7 @@ public class DoubleDES {
 
         BigInteger bits = new BigInteger(args[0],16);
         
-        String bitString = bits.toString(16);
+       // String bitString = bits.toString(16);
 
         
         byte[] inputKey = new byte [14];
@@ -118,13 +114,11 @@ public class DoubleDES {
         
         //this will store the bytes for the thing into the inputKey
         //inputKey = args[0].getBytes();
-        bitString = "";
+        String bitString = "";
         for(int i =0; i< inputKey.length;i++)
         {
-
             byte b1 = inputKey[i];
-            bitString += String.format("%8s",Integer.toBinaryString(b1 & 0xFF)).replace(' ','0');
-           
+            bitString += String.format("%8s",Integer.toBinaryString(b1 & 0xFF)).replace(' ','0');  
         }
         
         //System.out.println(bitString);
@@ -169,7 +163,8 @@ public class DoubleDES {
         System.arraycopy(inputKey, 0, key1, 0, 8);
         System.arraycopy(inputKey, 8, key2, 0, 8);
         
-        
+        //System.out.print(DatatypeConverter.printHexBinary(key1));
+
         //part where the Key is generated
         
         DESKeySpec keySpecEncryptA = new DESKeySpec(key1);
@@ -183,9 +178,10 @@ public class DoubleDES {
 
         DoubleDES crypt2 = new DoubleDES(secretKeyA, secretKeyB);
         
-        System.out.println("Encrypted Text: " + crypt2.encrypt(args[1]));
+        //System.out.println("Encrypted Text: " + crypt2.encrypt(args[1]).toLowerCase());
+        System.out.println(crypt2.encrypt(args[1]).toLowerCase());
         
-        System.out.println("Decrypted Text: " + crypt2.decrypt(crypt2.encrypt(args[1])));
+        //System.out.println("Decrypted Text: " + crypt2.decrypt(crypt2.encrypt(args[1])));
        
     }
     
