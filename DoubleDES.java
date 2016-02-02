@@ -109,29 +109,7 @@ public class DoubleDES {
         BigInteger bits = new BigInteger(args[0],16);
         
         String bitString = bits.toString(16);
-        
-        //System.out.println("Original Key String: " + bitString);
-        
-        
-        
-        //random key generation 
-//        KeyGenerator keygen1 = KeyGenerator.getInstance("DES");
-//        SecretKey desKey1 = keygen1.generateKey();
-//        KeyGenerator keygen2 = KeyGenerator.getInstance("DES");
-//        SecretKey desKey2 = keygen1.generateKey();
-//        DoubleDES crypt1 = new DoubleDES(desKey1, desKey2);
-//        
-//        System.out.println("Plain Text: " + args[1]);
-//        
-//        
-//        String encryptedText = crypt1.encrypt(args[1]); 
-//       
-//        System.out.println("Encrypted Text: " + encryptedText);
-//         
-//        String decryptedText = crypt1.decrypt(encryptedText);
-//        System.out.println("Decrypted Text: " + decryptedText);
 
-        //everything above this WORKS!
         
         byte[] inputKey = new byte [14];
         
@@ -143,9 +121,7 @@ public class DoubleDES {
         bitString = "";
         for(int i =0; i< inputKey.length;i++)
         {
-            //System.out.println(String.format("%02X",0x00)+" , " +inputKey[i]);
-            
-            
+
             byte b1 = inputKey[i];
             bitString += String.format("%8s",Integer.toBinaryString(b1 & 0xFF)).replace(' ','0');
            
@@ -192,16 +168,6 @@ public class DoubleDES {
         
         System.arraycopy(inputKey, 0, key1, 0, 8);
         System.arraycopy(inputKey, 8, key2, 0, 8);
-        
-        
-//        System.out.print("Key2 ");
-////        
-//        for(int i =0; i<key2.length; i++)
-//        {
-//            System.out.print(key2[i]);
-//        }
-        
-        //add some code for splitting into seperate 8 parts and padding
         
         
         //part where the Key is generated
